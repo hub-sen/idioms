@@ -96,6 +96,7 @@ public class Part1 {
 
 	/**
 	 * 函数式 - lambda
+	 *
 	 * @param pageVisits
 	 * @param page
 	 */
@@ -105,6 +106,7 @@ public class Part1 {
 
 	/**
 	 * 函数式 - 函数引用
+	 *
 	 * @param pageVisits
 	 * @param page
 	 */

@@ -10,9 +10,9 @@ import static com.shisen.idioms.baldStrong.Part1.Apple.Color.GREEN;
  * Description
  * </pre>
  */
-public class AppleGreenColorPredicate implements ApplePredicate {
+public class AppleGreenColorPredicate<T extends Apple> implements ApplePredicate<T> {
 	@Override
-	public boolean test(Apple apple) {
-		return GREEN.equals(apple.getColor());
+	public boolean test(T t) {
+		return GREEN.equals(t.getColor());
 	}
 }

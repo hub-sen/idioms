@@ -29,12 +29,12 @@ public class App {
 
 	@Before
 	public void before() {
-		inventory = List.of(new Apple(RED,25),
-				new Apple(WRITE,50),
-				new Apple(BLACK,75),
-				new Apple(GREEN,100),
-				new Apple(BLUE,125),
-				new Apple(PURPLE,150));
+		inventory = List.of(new Apple(RED, 25),
+				new Apple(WRITE, 50),
+				new Apple(BLACK, 75),
+				new Apple(GREEN, 100),
+				new Apple(BLUE, 125),
+				new Apple(PURPLE, 150));
 
 		result = new ArrayList<>();
 	}
@@ -59,19 +59,19 @@ public class App {
 
 	@Test
 	public void test3() {
-		result = filterApplesByPredicate(inventory, new AppleGreenColorPredicate());
+		result = filterApplesByPredicate(inventory, new AppleGreenColorPredicate<>());
 	}
 
 	@Test
 	public void test4() {
-		result = filterApplesByPredicate(inventory, (apple) -> BLACK.equals(apple.getColor()));
+		result = filterApplesByPredicate(inventory, apple -> BLACK.equals(apple.getColor()));
 	}
 
 
-	private List<Apple> filterApplesByPredicate(List<Apple> inventory,ApplePredicate applePredicate) {
-		ArrayList<Apple> apples = new ArrayList<>();
-		for (Apple apple : inventory) {
-			if (applePredicate.test(apple)){
+	private <T extends Apple> List<T> filterApplesByPredicate(List<T> inventory, ApplePredicate<T> applePredicate) {
+		ArrayList<T> apples = new ArrayList<>();
+		for (T apple : inventory) {
+			if (applePredicate.test(apple)) {
 				apples.add(apple);
 			}
 		}
@@ -80,6 +80,7 @@ public class App {
 
 	/**
 	 * 根据颜色筛选苹果
+	 *
 	 * @param inventory
 	 * @param color
 	 * @return
@@ -96,6 +97,7 @@ public class App {
 
 	/**
 	 * 筛选绿色苹果
+	 *
 	 * @param inventory
 	 * @return
 	 */
@@ -104,6 +106,23 @@ public class App {
 
 		for (Apple apple : inventory) {
 			if (GREEN.equals(apple.getColor())) {
+				apples.add(apple);
+			}
+		}
+		return apples;
+	}
+
+	/**
+	 * 筛选红色苹果
+	 *
+	 * @param inventory
+	 * @return
+	 */
+	private List<Apple> filterRedApples(List<Apple> inventory) {
+		ArrayList<Apple> apples = new ArrayList<>();
+
+		for (Apple apple : inventory) {
+			if (RED.equals(apple.getColor())) {
 				apples.add(apple);
 			}
 		}

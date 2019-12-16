@@ -26,7 +26,6 @@ public class MyTest {
 
 	@After
 	public void after() {
-		MyOptional.ofNullable(result).ifPresent(System.out::println, () -> System.out.println("result is null"));
 	}
 
 

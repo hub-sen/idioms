@@ -1,7 +1,7 @@
-package com.shisen.idioms.baldStrong.Part1.predicates;
+package com.shisen.idioms.share.instance.predicates;
 
-import com.shisen.idioms.baldStrong.Part1.Apple;
-import com.shisen.idioms.baldStrong.Part1.ApplePredicate;
+import com.shisen.idioms.share.instance.Apple;
+import com.shisen.idioms.share.instance.ApplePredicate;
 
 /**
  * <pre>

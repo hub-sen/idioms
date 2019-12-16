@@ -34,9 +34,8 @@ public class LambdaDemo {
 
 	/**
 	 * 引入Lambda
-	 * <p>
-	 * 好处:  1, 代码更简洁,
-	 * 2, 不会单独生成.class文件
+	 * 不写类名, 方法名
+	 *
 	 */
 	@Test
 	public void test3() {
@@ -64,14 +63,14 @@ public class LambdaDemo {
 	public void test5() {
 		// 多个参数
 		IEat3 eat = (food, name) -> System.out.println("eat... " + food + " ... " + name);
-		eat.eat("apple","shishi");
+		eat.eat("apple", "shishi");
 
 		// 代码块中有多行代码
 		IEat3 eat2 = (food, name) -> {
 			System.out.println("eat... " + food);
 			System.out.println("name = " + name);
 		};
-		eat2.eat("apple","shishi");
+		eat2.eat("apple", "shishi");
 	}
 
 
@@ -79,14 +78,14 @@ public class LambdaDemo {
 	public void test6() {
 		// 带返回值
 		IEat4 eat = (food, name) -> {
-			System.out.println("eat... "+food);
+			System.out.println("eat... " + food);
 			return 10;
 		};
 
 		// 带返回值的方法中只有一句代码
-		IEat4 eat2 = (food,name)->{return 10;};
+		IEat4 eat2 = (food, name) -> {return 10;};
 
-		IEat4 eat3 = (food,name)-> /*return*/ 10;
+		IEat4 eat3 = (food, name) -> /*return*/ 10;
 
 		System.out.println(eat.eat("apple", "shishi"));
 	}
@@ -94,8 +93,8 @@ public class LambdaDemo {
 	@Test
 	public void test7() {
 		// 参数带有final 修饰
-		IEat5 eat = (food,name) -> null==food?0:1;
-		IEat5 eat2 = (final String food,final String name) -> null==food?0:1;
+		IEat5 eat = (food, name) -> null == food ? 0 : 1;
+		IEat5 eat2 = (final String food, final String name) -> null == food ? 0 : 1;
 	}
 
 }
@@ -108,6 +107,14 @@ public class LambdaDemo {
 interface IEat {
 	// 无参数
 	void eat();
+}
+
+class IEatImpl implements IEat {
+
+	@Override
+	public void eat() {
+		System.out.println("eat Apple!");
+	}
 }
 
 @FunctionalInterface
@@ -123,18 +130,10 @@ interface IEat3 {
 }
 
 @FunctionalInterface
-interface IEat4{
+interface IEat4 {
 	int eat(String food, String name);
 }
 
-interface IEat5{
-	int eat(final String food,final String name);
-}
-
-class IEatImpl implements IEat {
-
-	@Override
-	public void eat() {
-		System.out.println("eat Apple!");
-	}
+interface IEat5 {
+	int eat(final String food, final String name);
 }
