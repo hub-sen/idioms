@@ -158,9 +158,9 @@ public class First {
 	public void streamTest_4() {
 		result = lists.stream()
 				.filter(e -> 4 <= e.length())
-				.peek(out::println)
+				//.peek(out::println)
 				.map(e -> e.split(""))
-				.peek(e -> out.println(Arrays.toString(e)))
+				//.peek(e -> out.println(Arrays.toString(e)))
 				.flatMap(Arrays::stream)
 				.distinct()
 				.peek(out::println)

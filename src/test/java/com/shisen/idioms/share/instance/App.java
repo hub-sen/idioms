@@ -127,6 +127,7 @@ public class App {
 	 */
 	private List<Apple> filterApplesByColor(List<Apple> inventory, Apple.Color color) {
 		ArrayList<Apple> apples = new ArrayList<>();
+
 		for (Apple apple : inventory) {
 			if (color.equals(apple.getColor())) {
 				apples.add(apple);
@@ -145,6 +146,7 @@ public class App {
 	 */
 	private <T extends Apple> List<T> filterApplesByPredicate(List<T> inventory, ApplePredicate<T> applePredicate) {
 		ArrayList<T> apples = new ArrayList<>();
+
 		for (T apple : inventory) {
 			if (applePredicate.test(apple)) {
 				apples.add(apple);
