@@ -1,5 +1,6 @@
 package com.shisen.idioms.testJdk;
 
+import lombok.val;
 import org.junit.Test;
 
 import java.util.List;
@@ -36,4 +37,22 @@ public class ObjectsTest {
 
 		Optional.ofNullable(lists).orElseThrow(() -> new RuntimeException("lists is null"));
 	}
+
+
+
+	@Test
+	public void testMyArray() {
+		val myArrayCount = new MyArrayCount();
+
+		Object[] elements = {1, 2, 3};
+
+		myArrayCount.addAll(elements);
+
+		System.out.println("myArrayCount.getCount() = " + myArrayCount.getCount());
+
+
+	}
+
+
+
 }

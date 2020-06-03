@@ -59,6 +59,9 @@ public class Test1 {
 
 		List<String> permutation = permutation(s1.toCharArray(), 0, s1.length(), new ArrayList<>());
 
+
+		System.out.println("permutation = " + permutation);
+
 		boolean b = permutation.stream().anyMatch(s2::contains);
 		System.out.println("b = " + b);
 	}
