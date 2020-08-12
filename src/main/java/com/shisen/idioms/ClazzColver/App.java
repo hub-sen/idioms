@@ -22,9 +22,11 @@ public class App {
         Test2 test2 = ClazzConverter.converterClass(test1, Test2.class);
 
 
-        test2.setDateStr("hello");
+
+        //test2.setDateStr("hello");
 
         System.out.println("test2 = " + test2);
+
 
 
         System.out.println("(2.4+12)/24 = " + (int)((16+12.0)/24));
