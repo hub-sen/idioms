@@ -22,12 +22,12 @@ public class CronTest {
     public static void main(String[] args) {
         CronTriggerImpl cronTrigger = new CronTriggerImpl();
         try {
-            cronTrigger.setCronExpression("0 5 10,16 ? * *");
+            cronTrigger.setCronExpression("0 0/5 0 ? * *");
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        List<Date> dates = TriggerUtils.computeFireTimes(cronTrigger, null, 20);
+        List<Date> dates = TriggerUtils.computeFireTimes(cronTrigger, null, 200);
 
         dates.stream()
                 .map(date -> String.format("%tF %tT", date, date))

@@ -1,5 +1,6 @@
 package com.shisen.idioms.hutool;
 
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import org.apache.commons.lang3.time.DateUtils;
@@ -36,6 +37,12 @@ public class DateUtilsTest {
         System.out.println("date = " + date);
         Date truncate = DateUtils.truncate(date, Calendar.MONTH);
         System.out.println("truncate = " + truncate);
+        System.out.println(String.format("%tF %tT", truncate, truncate));
+
+        System.out.println("date = " + date);
+        Date ceiling = DateUtil.truncate(date, DateField.MONTH);
+        System.out.println(String.format("%tF %tT", ceiling, ceiling));
+
         Date date1 = DateUtils.setHours(date, 23);
         Date date2 = DateUtils.setMinutes(date1, 59);
         Date date3 = DateUtils.setSeconds(date2, 59);

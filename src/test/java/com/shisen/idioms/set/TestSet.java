@@ -1,13 +1,6 @@
 package com.shisen.idioms.set;
 
-import org.apache.tomcat.util.buf.StringUtils;
 import org.junit.Test;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * <pre>
@@ -17,52 +10,50 @@ import java.util.Set;
  * </pre>
  */
 public class TestSet {
-    public static void main(String[] args) {
-        Set<String> plateNos = new HashSet<>();
-
-        String str1 = new String("津C30362");
-        String str2 = new String("津C30362");
-        String str3 = new String("津C30362");
-
-        plateNos.add(str1);
-        plateNos.add(str2);
-        plateNos.add(str3);
-
-        System.out.println("plateNos = " + plateNos);
-        System.out.println("StringUtils.join(plateNos) = " + StringUtils.join(plateNos));
-    }
 
     @Test
-    public void testTime() {
-        String timeRegex = "([0-1]?[0-9]|2[0-3]):(0?[0-9]|[1-5][0-9]):(0?[0-9]|[1-5][0-9])";
+    public void app() {
+        int[][] x = new int[5][5];
+        desktop(x);
 
-        String dateRegex = "(^((1[8-9]\\d{2})|([2-9]\\d{3}))([-\\/\\._])(10|12|0?[13578])([-\\/\\._])(3[01]|[12][0-9]|0?[1-9])$)|(^((1[8-9]\\d{2})|([2-9]\\d{3}))([-\\/\\._])(11|0?[469])([-\\/\\._])(30|[12][0-9]|0?[1-9])$)|(^((1[8-9]\\d{2})|([2-9]\\d{3}))([-\\/\\._])(0?2)([-\\/\\._])(2[0-8]|1[0-9]|0?[1-9])$)|(^([2468][048]00)([-\\/\\._])(0?2)([-\\/\\._])(29)$)|(^([3579][26]00)([-\\/\\._])(0?2)([-\\/\\._])(29)$)|(^([1][89][0][48])([-\\/\\._])(0?2)([-\\/\\._])(29)$)|(^([2-9][0-9][0][48])([-\\/\\._])(0?2)([-\\/\\._])(29)$)|(^([1][89][2468][048])([-\\/\\._])(0?2)([-\\/\\._])(29)$)|(^([2-9][0-9][2468][048])([-\\/\\._])(0?2)([-\\/\\._])(29)$)|(^([1][89][13579][26])([-\\/\\._])(0?2)([-\\/\\._])(29)$)|(^([2-9][0-9][13579][26])([-\\/\\._])(0?2)([-\\/\\._])(29)$)";
+    }
 
-        String dateTimeRegex = dateRegex +"\\s+"+ timeRegex;
+    public void desktop(int[][] desktop) {
 
-        String time = "3:59:59";
-        boolean timeMatches = time.matches(timeRegex);
-        System.out.println("timeMatches = " + timeMatches);
+        int xLength = desktop.length;
+        int yLength = desktop[0].length;
+        int xIndex = 0;
+        int yIndex = 0;
+        int xStep = 1;
+        int yStep = 1;
+        int turnBack = -2;
+        boolean xTurn;
+        boolean yTurn;
 
-        String date = "2020-2-29";
-        boolean dateMatches = date.matches(dateRegex);
-        System.out.println("dateMatches = " + dateMatches);
+        do {
+            xIndex += xStep;
+            yIndex += yStep;
 
-        String dateTime = "2020-13a-30 3:59:60";
-        boolean dateTimeMatches = dateTime.matches(dateTimeRegex);
-        System.out.println("dateTimeMatches = " + dateTimeMatches);
+            xTurn = false;
+            yTurn = false;
 
+            if (yIndex >= yLength || yIndex <= 0) {
+                yStep = -yStep;
+                yTurn = true;
+                turnBack++;
+            }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date parse = null;
-        try {
-            parse = simpleDateFormat.parse(dateTime);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+            if (xIndex >= xLength || xIndex <= 0) {
+                xStep = -xStep;
+                xTurn = true;
+                turnBack++;
+            }
 
-        System.out.println("parse = " + parse);
+            System.out.println("xIndex, yIndex = " + xIndex + ", " + yIndex);
 
+        } while (!(xTurn && yTurn));
+
+        System.out.println("turnBack = " + turnBack);
 
     }
 }
