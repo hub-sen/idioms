@@ -7,6 +7,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -71,4 +72,24 @@ public class DateUtilsTest {
         System.out.println("collect = " + collect);
 
     }
+
+    @Test
+    public void testOffset() {
+        LocalDate now = LocalDate.of(2020, 11, 1);
+        int dayOfMonth = now.getMonthValue();
+        System.out.println("dayOfMonth = " + dayOfMonth);
+    }
+
+    @Test
+    public void testOr() {
+        long x = 268435457;
+
+        ArrayList<String> strings = new ArrayList<>();
+        for (int i = 30; i > 0; i--) {
+            strings.add("" + ((x & 1) == 1));
+            x >>= 1;
+        }
+        System.out.println("strings = " + strings);
+    }
+
 }
