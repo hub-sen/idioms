@@ -104,6 +104,24 @@ public class RedisController {
 
     }
 
+    @PostMapping("setStr/{str}")
+    public void setStr(@PathVariable("str") String str) {
+        int index = 0;
+        for (int i = 0, lengthI = str.length(); i < lengthI; i++) {
+            char c = str.charAt(i);
+            String s = "0" + Integer.toBinaryString(c);
+
+            for (int j = 0, lengthJ = s.length(); j < lengthJ; j++) {
+                if (s.charAt(j) == '1') {
+                    System.out.println(index);
+                    redisTemplate.opsForValue().setBit(str, index, true);
+                }
+                index++;
+            }
+        }
+    }
+
+
     private List<String> getSignList(String key, LocalDate parse, int limit, int offset) {
         List<Long> longs = bitField(key, limit, offset);
 
