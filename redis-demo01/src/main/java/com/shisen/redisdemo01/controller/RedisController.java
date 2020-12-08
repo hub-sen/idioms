@@ -1,16 +1,14 @@
 package com.shisen.redisdemo01.controller;
 
-import com.shisen.redisdemo01.utils.RedisUtils;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.Jedis;
 
-import java.util.Collections;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <pre>
@@ -28,6 +26,9 @@ public class RedisController {
     @Value("${server.port}")
     private String serverPort;
 
+    @Autowired
+    private Redisson redisson;
+
     private final String redisKey = "goods:001";
 
     private final String redisLock = "buyLock";
@@ -37,13 +38,11 @@ public class RedisController {
 
         String value = UUID.randomUUID() + Thread.currentThread().getName();
 
+        RLock redissonLock = redisson.getLock(redisLock);
+
+        redissonLock.lock();
+
         try {
-            Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(redisKey, value, 10L, TimeUnit.SECONDS);
-
-            if (!ifAbsent) {
-                return "抢锁失败";
-            }
-
             String result = redisTemplate.opsForValue().get(redisKey);
             int goodNumber = null == result ? 0 : Integer.parseInt(result);
             if (0 < goodNumber) {
@@ -57,27 +56,7 @@ public class RedisController {
 
             return "商品售罄\t serverPort= " + serverPort;
         } finally {
-            Jedis jedis = RedisUtils.getJedis();
-
-            String script = "if redis.call('get',KEYS[1]) == ARGV[1]" +
-                    "then" +
-                    "return redis.call('del',KEYS[1])" +
-                    "else" +
-                    "    return 0" +
-                    "end";
-            try {
-                Object eval = jedis.eval(script, Collections.singletonList(redisLock), Collections.singletonList(value));
-                if ("1".equals(eval.toString())) {
-                    System.out.println("delete redisLock ok");
-                } else {
-                    System.out.println("delete redisLock not ok");
-                }
-            } finally {
-                if (null != jedis) {
-                    jedis.close();
-                }
-            }
-
+            redissonLock.unlock();
         }
     }
 }
