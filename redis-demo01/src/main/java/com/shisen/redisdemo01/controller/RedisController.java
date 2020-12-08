@@ -54,7 +54,9 @@ public class RedisController {
 
             return "商品售罄\t serverPort= " + serverPort;
         } finally {
-            redisTemplate.delete(redisLock);
+            if (value.equals(redisTemplate.opsForValue().get(redisLock))) {
+                redisTemplate.delete(redisLock);
+            }
         }
     }
 }
