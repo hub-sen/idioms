@@ -1,12 +1,14 @@
 package com.shisen.redisdemo01.controller;
 
+import com.shisen.redisdemo01.utils.RedisUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
 
-import java.util.List;
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +33,7 @@ public class RedisController {
     private final String redisLock = "buyLock";
 
     @GetMapping("buy")
-    public String buy() {
+    public String buy() throws Exception {
 
         String value = UUID.randomUUID() + Thread.currentThread().getName();
 
@@ -55,20 +57,27 @@ public class RedisController {
 
             return "商品售罄\t serverPort= " + serverPort;
         } finally {
-            while (true) {
-                redisTemplate.watch(redisLock);
-                if (value.equals(redisTemplate.opsForValue().get(redisLock))) {
-                    redisTemplate.setEnableTransactionSupport(true);
-                    redisTemplate.multi();
-                    redisTemplate.delete(redisLock);
-                    List<Object> exec = redisTemplate.exec();
-                    if (null == exec) {
-                        continue;
-                    }
+            Jedis jedis = RedisUtils.getJedis();
+
+            String script = "if redis.call('get',KEYS[1]) == ARGV[1]" +
+                    "then" +
+                    "return redis.call('del',KEYS[1])" +
+                    "else" +
+                    "    return 0" +
+                    "end";
+            try {
+                Object eval = jedis.eval(script, Collections.singletonList(redisLock), Collections.singletonList(value));
+                if ("1".equals(eval.toString())) {
+                    System.out.println("delete redisLock ok");
+                } else {
+                    System.out.println("delete redisLock not ok");
                 }
-                redisTemplate.unwatch();
-                break;
+            } finally {
+                if (null != jedis) {
+                    jedis.close();
+                }
             }
+
         }
     }
 }
