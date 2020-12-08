@@ -6,6 +6,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 /**
  * <pre>
  * Description
@@ -24,9 +26,20 @@ public class RedisController {
 
     private final String redisKey = "goods:001";
 
+    private final String redisLock = "buyLock";
+
     @GetMapping("buy")
     public String buy() {
-        synchronized (this) {
+
+        String value = UUID.randomUUID() + Thread.currentThread().getName();
+
+        try {
+            Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(redisLock, value);
+
+            if (!ifAbsent) {
+                return "抢锁失败";
+            }
+
             String result = redisTemplate.opsForValue().get(redisKey);
             int goodNumber = null == result ? 0 : Integer.parseInt(result);
             if (0 < goodNumber) {
@@ -39,6 +52,8 @@ public class RedisController {
             }
 
             return "商品售罄\t serverPort= " + serverPort;
+        } finally {
+            redisTemplate.delete(redisLock);
         }
     }
 }
