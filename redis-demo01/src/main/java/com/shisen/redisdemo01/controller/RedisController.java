@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -54,8 +55,19 @@ public class RedisController {
 
             return "商品售罄\t serverPort= " + serverPort;
         } finally {
-            if (value.equals(redisTemplate.opsForValue().get(redisLock))) {
-                redisTemplate.delete(redisLock);
+            while (true) {
+                redisTemplate.watch(redisLock);
+                if (value.equals(redisTemplate.opsForValue().get(redisLock))) {
+                    redisTemplate.setEnableTransactionSupport(true);
+                    redisTemplate.multi();
+                    redisTemplate.delete(redisLock);
+                    List<Object> exec = redisTemplate.exec();
+                    if (null == exec) {
+                        continue;
+                    }
+                }
+                redisTemplate.unwatch();
+                break;
             }
         }
     }
