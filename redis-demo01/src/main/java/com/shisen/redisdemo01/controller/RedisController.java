@@ -35,8 +35,7 @@ public class RedisController {
         String value = UUID.randomUUID() + Thread.currentThread().getName();
 
         try {
-            Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(redisLock, value);
-            redisTemplate.expire(redisLock, 10L, TimeUnit.SECONDS);
+            Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(redisKey, value, 10L, TimeUnit.SECONDS);
 
             if (!ifAbsent) {
                 return "抢锁失败";
