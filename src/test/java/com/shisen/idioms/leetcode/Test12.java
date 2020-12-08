@@ -1,11 +1,25 @@
 package com.shisen.idioms.leetcode;
 
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONArray;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,29 +55,57 @@ public class Test12 {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private static int[]  res = {0};
+    private static int[] res = {0};
 
     @Test
     public void add() {
         int sum = sum(3);
         System.out.println("sum = " + sum);
+    }
+
+    @Test
+    public void test1221() {
+        Calendar instance = Calendar.getInstance();
+        instance.set(Calendar.MONTH, 2);
+        instance.set(Calendar.DAY_OF_MONTH,31);
+
+
+        Date date = instance.getTime();
+
+        System.out.println("date = " + date);
+
+        Date begin = DateUtil.beginOfMonth(date).toJdkDate();
+        Date end = DateUtil.endOfMonth(date).toJdkDate();
+
+        Date date1 = DateUtil.offsetMonth(date, -1).toJdkDate();
+        System.out.println(date1);
+
+        Date begin2 = DateUtil.beginOfMonth(date1).toJdkDate();
+        Date end2 = DateUtil.endOfMonth(date1).toJdkDate();
+
+        System.out.println("begin = " + begin);
+        System.out.println("end = " + end);
+        System.out.println("begin2 = " + begin2);
+        System.out.println("end2 = " + end2);
+
+
+    }
+
+
+    public static Date getBeginTime(int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate localDate = yearMonth.atDay(1);
+        LocalDateTime startOfDay = localDate.atStartOfDay();
+        ZonedDateTime zonedDateTime = startOfDay.atZone(ZoneId.systemDefault());
+        return Date.from(zonedDateTime.toInstant());
+    }
+
+    public static Date getEndTime(int year, int month) {
+        YearMonth yearMonth = YearMonth.of(year, month);
+        LocalDate endOfMonth = yearMonth.atEndOfMonth();
+        LocalDateTime localDateTime = endOfMonth.atTime(23, 59, 59, 999);
+        ZonedDateTime zonedDateTime = localDateTime.atZone(ZoneId.systemDefault());
+        return Date.from(zonedDateTime.toInstant());
     }
 
 
@@ -74,7 +116,6 @@ public class Test12 {
             return n + sum(n - 1);
         }
     }
-
 
 
     @Test
@@ -88,6 +129,132 @@ public class Test12 {
 
         System.out.println("parse = " + parse);
 
+        // 零散
+        ArrayList<PreferentialRange> ls = new ArrayList<>();
+
+        PreferentialRange preferentialRange2 = new PreferentialRange(2, 3, BigDecimal.valueOf(80), 1,"多发多送优惠券",30);
+        PreferentialRange preferentialRange3 = new PreferentialRange(3, 4, BigDecimal.valueOf(100), 1,"多发多送优惠券",30);
+        PreferentialRange preferentialRange5 = new PreferentialRange(5, 6, BigDecimal.valueOf(200), 1,"多发多送优惠券",30);
+        PreferentialRange preferentialRange10 = new PreferentialRange(10, 11, BigDecimal.valueOf(600), 1,"多发多送优惠券",30);
+        PreferentialRange preferentialRange20 = new PreferentialRange(20, 21, BigDecimal.valueOf(1000), 1,"多发多送优惠券",30);
+        ls.add(preferentialRange2);
+        ls.add(preferentialRange3);
+        ls.add(preferentialRange5);
+        ls.add(preferentialRange10);
+        ls.add(preferentialRange20);
+
+
+        // 常发
+
+        ArrayList<PreferentialRange> cf = new ArrayList<>();
+
+        PreferentialRange cf10 = new PreferentialRange(10, 11, BigDecimal.valueOf(600), 1,"多发多送优惠券",30);
+        PreferentialRange cf20 = new PreferentialRange(20, 21, BigDecimal.valueOf(1000), 1,"多发多送优惠券",30);
+        cf.add(cf10);
+        cf.add(cf20);
+
+
+        HashMap<String, List<PreferentialRange>> stringPreferentialRangeHashMap = new HashMap<>();
+
+        stringPreferentialRangeHashMap.put("LS", ls);
+        stringPreferentialRangeHashMap.put("CF", cf);
+
+        String s1 = JSONArray.toJSONString(stringPreferentialRangeHashMap);
+        System.out.println("s1 = " + s1);
+
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            HashMap<String, List<PreferentialRange>> preferentialRangeMap = objectMapper.readValue(s1, new TypeReference<>() {
+            });
+            System.out.println("preferentialRangeMap = " + preferentialRangeMap);
+
+
+            // 已完成的订单数量
+            int count = 100;
+            String memberType = "CF";
+
+
+            PreferentialRange preferentialRange = preferentialRangeMap.get(memberType)
+                    .stream()
+                    .filter(x -> x.inRange(count))
+                    .findFirst()
+                    .orElse(null);
+
+
+            if (Objects.isNull(preferentialRange)) {
+                System.out.println("未找到对应的优惠活动");
+            } else {
+                System.out.println("优惠价格 = " + preferentialRange.getPreferentialPrice());
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    @Test
+    public void testReverseList() {
+        ListNode listNode1 = new ListNode(1);
+        ListNode listNode2 = new ListNode(2);
+        ListNode listNode3 = new ListNode(3);
+        ListNode listNode4 = new ListNode(4);
+        ListNode listNode5 = new ListNode(5);
+        listNode1.next = listNode2;
+        listNode2.next = listNode3;
+        listNode3.next = listNode4;
+        listNode4.next = listNode5;
+
+        ListNode listNode = listNode1;
+
+        while (null != listNode) {
+            System.out.println("listNode = " + listNode);
+            listNode = listNode.next;
+        }
+
+/*
+        ListNode reverseNode = reverseNode(listNode1);
+
+        while (null != reverseNode) {
+            System.out.println("reverseNode = " + reverseNode);
+            reverseNode = reverseNode.next;
+        }*/
+
+        ListNode reverseNode2 = reverseNode_2(listNode1);
+
+        while (null != reverseNode2) {
+            System.out.println("reverseNode2 = " + reverseNode2);
+            reverseNode2 = reverseNode2.next;
+        }
+
+    }
+
+    private ListNode reverseNode(ListNode listNode){
+        if (null == listNode || null == listNode.next) {
+            return listNode;
+        }
+
+        ListNode newListNode = reverseNode(listNode.next);
+        listNode.next.next = listNode;
+        listNode.next = null;
+
+        return newListNode;
+    }
+
+    private ListNode reverseNode_2(ListNode listNode) {
+        ListNode preNode = null;
+        ListNode cur = listNode;
+
+        while (null != cur) {
+            ListNode next = cur.next;
+            cur.next = preNode;
+            preNode = cur;
+            cur = next;
+        }
+
+        return preNode;
     }
 
 

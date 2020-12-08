@@ -19,4 +19,10 @@ public class ListNode {
 	ListNode(int x) {
 		val = x;
 	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(val);
+	}
+
 }

@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -35,9 +36,29 @@ public class StringFormat {
         System.out.println("dataStr = " + dataStr);
 
 
-        String format = String.format("第一名:%d分,第二名:%d分,第三名:%d分", 11, 12, 13);
+        String format = String.format("第一名:%.2f分,第二名:%d分,第三名:%d分", 11.0, 12, 13);
+
+        String str= "第一名:%.2f分,第二名:%d分,第三名:%d分";
+
+
+        String replace = str.replace("%d", ""+11.0);
+        System.out.println("replace = " + replace);
+
 
         System.out.println(format);
+
+
+
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(new Date());
+        instance.set(Calendar.HOUR_OF_DAY, 0);
+        instance.set(Calendar.MINUTE,0);
+        instance.set(Calendar.SECOND,0);
+        Date time = instance.getTime();
+        instance.add(Calendar.DAY_OF_YEAR, 20);
+        Date time1 = instance.getTime();
+        System.out.println("time = " + time);
+        System.out.println("time1 = " + time1);
     }
 
     @Test

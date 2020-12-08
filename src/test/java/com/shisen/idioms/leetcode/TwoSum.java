@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Optional;
 
 /**
@@ -31,6 +32,16 @@ public class TwoSum {
 
 	private int[] twoSum(int[] nums, int target) {
 
-		return null;
+		HashMap<Integer, Integer> tempMap = new HashMap<>();
+
+		for (int i = 0; i < nums.length; i++) {
+			int complement = target - nums[i];
+			if (tempMap.containsKey(complement)) {
+				return new int[]{i, tempMap.get(complement)};
+			}
+			tempMap.put(nums[i], i);
+		}
+
+		throw new IllegalArgumentException("No two sum solution");
 	}
 }
