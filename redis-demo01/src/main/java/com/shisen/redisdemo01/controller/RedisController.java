@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <pre>
@@ -35,6 +36,7 @@ public class RedisController {
 
         try {
             Boolean ifAbsent = redisTemplate.opsForValue().setIfAbsent(redisLock, value);
+            redisTemplate.expire(redisLock, 10L, TimeUnit.SECONDS);
 
             if (!ifAbsent) {
                 return "抢锁失败";
