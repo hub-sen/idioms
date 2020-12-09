@@ -54,7 +54,9 @@ public class RedisController {
 
             return "商品售罄\t serverPort= " + serverPort;
         } finally {
-            redissonLock.unlock();
+            if (redissonLock.isLocked() && redissonLock.isHeldByCurrentThread()) {
+                redissonLock.unlock();
+            }
         }
     }
 }
