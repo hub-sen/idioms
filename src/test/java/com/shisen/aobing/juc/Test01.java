@@ -1,5 +1,7 @@
 package com.shisen.aobing.juc;
 
+import org.junit.Test;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -40,6 +42,19 @@ public class Test01 {
             }
         },"B").start();
 
+
+    }
+
+    @Test
+    public void test01() {
+
+        String java = new StringBuilder("ja").append("va").toString();
+        String javaIntern = java.intern();
+        System.out.println(java == javaIntern);
+
+        String shishi = new StringBuilder("shi").append("shi").toString();
+        String shishiIntern = shishi.intern();
+        System.out.println(shishi == shishiIntern);
 
     }
 }
